@@ -1,15 +1,16 @@
-# Drumz.xyz - AI Drum Beat Generator
+# Drumz.xyz - Voice-Powered AI Drum Generator
 
 ## Overview
-Drumz.xyz is a web application that generates custom AI-powered drum tracks for musicians. Users can select from 9+ genres (rock, punk, jazz, blast beats, reggae, funk, hip hop, latin, trap), set their desired BPM (60-220), and add style prompts to create unique drum patterns.
+Drumz.xyz is a voice-activated web application that generates custom AI-powered drum tracks for musicians. Like Suno, but for drums only - users speak or type natural language descriptions of the drums they need, and the AI generates custom drum patterns in seconds.
 
 ## Project Architecture
 
 ### Frontend (React + TypeScript)
 - **Framework**: React with Vite
 - **Routing**: Wouter
-- **Styling**: Tailwind CSS with Shadcn UI components
+- **Styling**: Tailwind CSS with Shadcn UI components (rich purple theme)
 - **State Management**: TanStack Query for server state
+- **Voice Input**: Web Speech API for speech-to-text
 - **Theme**: Dark mode by default, with light/dark toggle
 
 ### Backend (Express + TypeScript)
@@ -18,8 +19,8 @@ Drumz.xyz is a web application that generates custom AI-powered drum tracks for 
 - **External API**: Artificial Studio API for drum generation
 
 ### Key Pages
-- `/` - Landing page with hero, genre showcase, how it works, social proof
-- `/generate` - Drum generator interface with controls and history
+- `/` - Landing page with voice-first hero, example prompts, how it works
+- `/generate` - Voice-powered drum generator with microphone button and text input
 
 ## Environment Variables
 
@@ -30,8 +31,8 @@ Drumz.xyz is a web application that generates custom AI-powered drum tracks for 
 ## API Endpoints
 
 ### POST /api/generate
-Generate a new drum track
-- **Request**: `{ genre: string, bpm: number, style?: string }`
+Generate a new drum track from natural language prompt
+- **Request**: `{ prompt: string, bpm?: number }`
 - **Response**: `DrumGeneration` object with audioUrl
 
 ### GET /api/history
@@ -47,9 +48,8 @@ Get a specific generation by ID
 ```typescript
 {
   id: string;
-  genre: string;
-  bpm: number;
-  style: string | null;
+  prompt: string;
+  bpm: number | null;
   audioUrl: string | null;
   status: "pending" | "generating" | "completed" | "failed";
   createdAt: Date;
@@ -57,23 +57,25 @@ Get a specific generation by ID
 ```
 
 ## Key Features
-- 9+ genre presets with default BPMs
-- BPM slider (60-220)
-- Custom style prompts
-- Audio player with waveform visualization
-- Download as MP3/WAV
-- Generation history (last 10 beats)
-- Regenerate previous beats
-- Dark/light theme toggle
-- Responsive design for mobile and desktop
+- **Voice Input**: Speak naturally to describe drums you need
+- **Text Input**: Type descriptions for precise control
+- **Optional BPM**: Specify tempo (60-220) or let AI decide
+- **Audio Player**: Waveform visualization, play/pause, volume control
+- **Download**: MP3/WAV formats for DAW import
+- **Generation History**: Last 10 beats with replay and regenerate
+- **Dark/Light Theme**: Toggle between modes
+- **Responsive Design**: Works on mobile and desktop
 
 ## Development Notes
 
 ### Design System
 Following `design_guidelines.md`:
 - Font: Inter (UI), Space Grotesk (display/headings)
-- Dark theme optimized for musicians
+- Rich purple theme for distinctive branding
 - Card-based UI with subtle elevation
+
+### Voice Recognition
+Uses browser's Web Speech API (SpeechRecognition). Works best in Chrome/Edge. Falls back to text input if voice is unavailable.
 
 ### Fallback Behavior
 When ARTIFICIAL_STUDIO_API_KEY is not set or API calls fail, the app returns demo audio from SoundHelix to ensure the UI remains functional for testing.

@@ -1,22 +1,17 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { Loader2, Wand2 } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Loader2, Sparkles, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
+import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { GENRES, type DrumGeneration } from "@shared/schema";
+import { type DrumGeneration } from "@shared/schema";
 import { AudioPlayer } from "./audio-player";
+import { VoiceInput } from "./voice-input";
 
 interface DrumGeneratorProps {
   onGenerationComplete?: (generation: DrumGeneration) => void;
@@ -24,17 +19,15 @@ interface DrumGeneratorProps {
 
 export function DrumGenerator({ onGenerationComplete }: DrumGeneratorProps) {
   const { toast } = useToast();
-  const [genre, setGenre] = useState<string>("rock");
+  const [prompt, setPrompt] = useState<string>("");
   const [bpm, setBpm] = useState<number>(120);
-  const [style, setStyle] = useState<string>("");
+  const [useBpm, setUseBpm] = useState<boolean>(false);
   const [currentGeneration, setCurrentGeneration] = useState<DrumGeneration | null>(null);
 
-  const selectedGenre = GENRES.find((g) => g.id === genre);
-
   const generateMutation = useMutation({
-    mutationFn: async (data: { genre: string; bpm: number; style?: string }) => {
+    mutationFn: async (data: { prompt: string; bpm?: number }) => {
       const response = await apiRequest("POST", "/api/generate", data);
-      return response as DrumGeneration;
+      return await response.json() as DrumGeneration;
     },
     onSuccess: (data) => {
       setCurrentGeneration(data);
@@ -42,7 +35,7 @@ export function DrumGenerator({ onGenerationComplete }: DrumGeneratorProps) {
       onGenerationComplete?.(data);
       toast({
         title: "Beat generated!",
-        description: `${selectedGenre?.name || genre} drums at ${bpm} BPM ready to play.`,
+        description: "Your custom drums are ready to play.",
       });
     },
     onError: (error: Error) => {
@@ -54,110 +47,113 @@ export function DrumGenerator({ onGenerationComplete }: DrumGeneratorProps) {
     },
   });
 
-  const handleGenreChange = (value: string) => {
-    setGenre(value);
-    const genreData = GENRES.find((g) => g.id === value);
-    if (genreData) {
-      setBpm(genreData.defaultBpm);
-    }
+  const handleVoiceTranscript = (text: string) => {
+    setPrompt(text);
+    handleGenerate(text);
   };
 
-  const handleGenerate = () => {
-    generateMutation.mutate({
-      genre,
-      bpm,
-      style: style.trim() || undefined,
-    });
-  };
-
-  const handleRegenerate = () => {
-    if (currentGeneration) {
-      generateMutation.mutate({
-        genre: currentGeneration.genre,
-        bpm: currentGeneration.bpm,
-        style: currentGeneration.style || undefined,
+  const handleGenerate = (promptText?: string) => {
+    const textToUse = promptText || prompt;
+    if (!textToUse.trim()) {
+      toast({
+        title: "Describe your drums",
+        description: "Tell us what kind of drum beat you want, or use voice input.",
+        variant: "destructive",
       });
+      return;
     }
+
+    generateMutation.mutate({
+      prompt: textToUse,
+      bpm: useBpm ? bpm : undefined,
+    });
   };
 
   return (
     <div className="space-y-6">
       <Card className="p-6">
         <div className="space-y-6">
-          <div>
-            <Label htmlFor="genre" className="text-base font-medium">
-              Genre
-            </Label>
-            <Select value={genre} onValueChange={handleGenreChange}>
-              <SelectTrigger className="mt-2" data-testid="select-genre">
-                <SelectValue placeholder="Select a genre" />
-              </SelectTrigger>
-              <SelectContent>
-                {GENRES.map((g) => (
-                  <SelectItem key={g.id} value={g.id} data-testid={`option-genre-${g.id}`}>
-                    {g.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="text-center">
+            <h2 className="font-display text-xl font-semibold mb-2">
+              What drums do you need?
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Speak or type your request - be as specific as you like
+            </p>
           </div>
 
-          <div>
-            <div className="flex items-center justify-between">
-              <Label htmlFor="bpm" className="text-base font-medium">
-                BPM (Tempo)
-              </Label>
-              <span className="font-mono text-lg font-bold text-primary" data-testid="text-bpm-value">
-                {bpm}
+          <VoiceInput 
+            onTranscript={handleVoiceTranscript}
+            disabled={generateMutation.isPending}
+          />
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">
+                or type your request
               </span>
             </div>
-            <Slider
-              id="bpm"
-              value={[bpm]}
-              onValueChange={(v) => setBpm(v[0])}
-              min={60}
-              max={220}
-              step={1}
-              className="mt-4"
-              data-testid="slider-bpm"
-            />
-            <div className="mt-2 flex justify-between text-xs text-muted-foreground">
-              <span>60 (Slow)</span>
-              <span>140 (Medium)</span>
-              <span>220 (Fast)</span>
-            </div>
           </div>
 
-          <div>
-            <Label htmlFor="style" className="text-base font-medium">
-              Style Prompt (Optional)
-            </Label>
+          <div className="space-y-2">
             <Textarea
-              id="style"
-              value={style}
-              onChange={(e) => setStyle(e.target.value)}
-              placeholder="e.g., with crash fills, double bass, syncopated hi-hats, shuffle feel..."
-              className="mt-2 resize-none"
-              rows={3}
-              data-testid="input-style"
+              placeholder="e.g., Funky hip hop beat with heavy snare and ghost notes, or a fast punk rock pattern with crash fills..."
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              className="min-h-[100px] resize-none"
+              data-testid="input-prompt"
             />
+          </div>
+
+          <div className="flex items-center justify-between gap-4 p-4 rounded-lg bg-muted/50">
+            <div className="flex items-center gap-3">
+              <Switch
+                id="use-bpm"
+                checked={useBpm}
+                onCheckedChange={setUseBpm}
+                data-testid="switch-bpm"
+              />
+              <Label htmlFor="use-bpm" className="text-sm">
+                Specify tempo
+              </Label>
+            </div>
+            
+            {useBpm && (
+              <div className="flex items-center gap-4 flex-1 max-w-xs">
+                <Slider
+                  value={[bpm]}
+                  onValueChange={(v) => setBpm(v[0])}
+                  min={60}
+                  max={220}
+                  step={1}
+                  className="flex-1"
+                  data-testid="slider-bpm"
+                />
+                <span className="font-mono text-sm font-medium w-16 text-right">
+                  {bpm} BPM
+                </span>
+              </div>
+            )}
           </div>
 
           <Button
-            size="lg"
+            onClick={() => handleGenerate()}
+            disabled={generateMutation.isPending || !prompt.trim()}
             className="w-full"
-            onClick={handleGenerate}
-            disabled={generateMutation.isPending}
+            size="lg"
             data-testid="button-generate"
           >
             {generateMutation.isPending ? (
               <>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                Generating...
+                Creating your beat...
               </>
             ) : (
               <>
-                <Wand2 className="mr-2 h-5 w-5" />
+                <Sparkles className="mr-2 h-5 w-5" />
                 Generate Drums
               </>
             )}
@@ -165,28 +161,17 @@ export function DrumGenerator({ onGenerationComplete }: DrumGeneratorProps) {
         </div>
       </Card>
 
-      {generateMutation.isPending && (
-        <Card className="p-8">
-          <div className="flex flex-col items-center justify-center text-center">
-            <div className="relative">
-              <div className="h-16 w-16 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
-            </div>
-            <p className="mt-4 font-medium">Creating your beat...</p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Generating {selectedGenre?.name || genre} drums at {bpm} BPM
-            </p>
+      {currentGeneration && currentGeneration.audioUrl && currentGeneration.status === "completed" && (
+        <Card className="p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Volume2 className="h-5 w-5 text-primary" />
+            <h3 className="font-display font-semibold">Your Beat</h3>
           </div>
+          <AudioPlayer
+            audioUrl={currentGeneration.audioUrl}
+            title={currentGeneration.prompt.slice(0, 50) + (currentGeneration.prompt.length > 50 ? "..." : "")}
+          />
         </Card>
-      )}
-
-      {currentGeneration && currentGeneration.audioUrl && !generateMutation.isPending && (
-        <AudioPlayer
-          audioUrl={currentGeneration.audioUrl}
-          genre={currentGeneration.genre}
-          bpm={currentGeneration.bpm}
-          onRegenerate={handleRegenerate}
-          isRegenerating={generateMutation.isPending}
-        />
       )}
     </div>
   );

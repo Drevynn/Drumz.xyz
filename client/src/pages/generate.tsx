@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Mic } from "lucide-react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/header";
@@ -29,12 +29,19 @@ export default function GeneratePage() {
                 Back to Home
               </Button>
             </Link>
-            <h1 className="font-display text-3xl font-bold md:text-4xl">
-              Generate Drums
-            </h1>
-            <p className="mt-2 text-muted-foreground">
-              Create custom AI-powered drum tracks in seconds
-            </p>
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                <Mic className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h1 className="font-display text-3xl font-bold md:text-4xl">
+                  Voice-Powered Drums
+                </h1>
+                <p className="text-muted-foreground">
+                  Just say what you need - we'll create it
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
@@ -48,8 +55,7 @@ export default function GeneratePage() {
                   </h2>
                   <AudioPlayer
                     audioUrl={selectedGeneration.audioUrl}
-                    genre={selectedGeneration.genre}
-                    bpm={selectedGeneration.bpm}
+                    title={selectedGeneration.prompt}
                   />
                 </div>
               )}

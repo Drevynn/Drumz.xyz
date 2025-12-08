@@ -6,16 +6,14 @@ import { Card } from "@/components/ui/card";
 
 interface AudioPlayerProps {
   audioUrl: string;
-  genre: string;
-  bpm: number;
+  title?: string;
   onRegenerate?: () => void;
   isRegenerating?: boolean;
 }
 
 export function AudioPlayer({
   audioUrl,
-  genre,
-  bpm,
+  title,
   onRegenerate,
   isRegenerating,
 }: AudioPlayerProps) {
@@ -134,7 +132,10 @@ export function AudioPlayer({
   const handleDownload = () => {
     const link = document.createElement("a");
     link.href = audioUrl;
-    link.download = `drumforge-${genre}-${bpm}bpm.mp3`;
+    const filename = title 
+      ? `drumz-${title.slice(0, 30).replace(/\s+/g, "-").toLowerCase()}.mp3`
+      : "drumz-beat.mp3";
+    link.download = filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -149,6 +150,10 @@ export function AudioPlayer({
   return (
     <Card className="p-6">
       <audio ref={audioRef} src={audioUrl} preload="metadata" />
+      
+      {title && (
+        <p className="text-sm text-muted-foreground mb-3 truncate">{title}</p>
+      )}
       
       <div className="mb-4">
         <canvas
@@ -168,7 +173,7 @@ export function AudioPlayer({
         data-testid="slider-audio-progress"
       />
 
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-2">
           <Button
             size="icon"

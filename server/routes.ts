@@ -19,12 +19,11 @@ export async function registerRoutes(
         });
       }
 
-      const { genre, bpm, style } = parseResult.data;
+      const { prompt, bpm } = parseResult.data;
 
       const generation = await storage.createDrumGeneration({
-        genre,
-        bpm,
-        style: style || null,
+        prompt,
+        bpm: bpm || null,
         audioUrl: null,
         status: "generating",
       });
@@ -35,12 +34,12 @@ export async function registerRoutes(
         if (!apiKey) {
           const demoGeneration = await storage.updateDrumGeneration(generation.id, {
             status: "completed",
-            audioUrl: getDemoAudioUrl(genre),
+            audioUrl: getDemoAudioUrl(),
           });
           return res.json(demoGeneration);
         }
 
-        const prompt = buildPrompt(genre, bpm, style);
+        const fullPrompt = buildPrompt(prompt, bpm);
         
         const response = await fetch("https://api.artificialstudio.ai/api/generate", {
           method: "POST",
@@ -51,7 +50,7 @@ export async function registerRoutes(
           body: JSON.stringify({
             model: "drum-generator",
             input: {
-              prompt,
+              prompt: fullPrompt,
               seed: "-1",
             },
           }),
@@ -63,7 +62,7 @@ export async function registerRoutes(
           
           const demoGeneration = await storage.updateDrumGeneration(generation.id, {
             status: "completed",
-            audioUrl: getDemoAudioUrl(genre),
+            audioUrl: getDemoAudioUrl(),
           });
           return res.json(demoGeneration);
         }
@@ -72,7 +71,7 @@ export async function registerRoutes(
         
         const updatedGeneration = await storage.updateDrumGeneration(generation.id, {
           status: "completed",
-          audioUrl: data.output?.audio_url || data.audio_url || getDemoAudioUrl(genre),
+          audioUrl: data.output?.audio_url || data.audio_url || getDemoAudioUrl(),
         });
 
         return res.json(updatedGeneration);
@@ -81,7 +80,7 @@ export async function registerRoutes(
         
         const demoGeneration = await storage.updateDrumGeneration(generation.id, {
           status: "completed",
-          audioUrl: getDemoAudioUrl(genre),
+          audioUrl: getDemoAudioUrl(),
         });
         return res.json(demoGeneration);
       }
@@ -118,40 +117,23 @@ export async function registerRoutes(
   return httpServer;
 }
 
-function buildPrompt(genre: string, bpm: number, style?: string): string {
-  const genrePrompts: Record<string, string> = {
-    rock: "classic rock drum pattern, powerful snare, driving rhythm",
-    punk: "fast aggressive punk drums, rapid hi-hats, relentless energy",
-    jazz: "jazz swing drums, brush patterns, syncopated rhythms",
-    "blast-beats": "extreme metal blast beats, double bass, intense speed",
-    reggae: "reggae drums, one drop pattern, off-beat emphasis",
-    funk: "funky drums, tight groove, ghost notes, syncopation",
-    "hip-hop": "hip hop boom bap drums, hard snare, deep kick",
-    latin: "latin percussion, clave rhythm, congas and timbales feel",
-    trap: "trap drums, 808 kicks, rapid hi-hats, rolling patterns",
-  };
-
-  let prompt = genrePrompts[genre] || `${genre} style drums`;
-  prompt += `, ${bpm} BPM`;
+function buildPrompt(userPrompt: string, bpm?: number): string {
+  let prompt = `drums, drum pattern, ${userPrompt}`;
   
-  if (style) {
-    prompt += `, ${style}`;
+  if (bpm) {
+    prompt += `, ${bpm} BPM`;
   }
 
   return prompt;
 }
 
-function getDemoAudioUrl(genre: string): string {
-  const demoUrls: Record<string, string> = {
-    rock: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    punk: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-    jazz: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-    "blast-beats": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-    reggae: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
-    funk: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3",
-    "hip-hop": "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3",
-    latin: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
-    trap: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3",
-  };
-  return demoUrls[genre] || demoUrls.rock;
+function getDemoAudioUrl(): string {
+  const demoUrls = [
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3",
+  ];
+  return demoUrls[Math.floor(Math.random() * demoUrls.length)];
 }

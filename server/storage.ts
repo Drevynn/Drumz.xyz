@@ -42,9 +42,8 @@ export class MemStorage implements IStorage {
     const id = randomUUID();
     const generation: DrumGeneration = {
       id,
-      genre: insertGeneration.genre,
-      bpm: insertGeneration.bpm,
-      style: insertGeneration.style || null,
+      prompt: insertGeneration.prompt,
+      bpm: insertGeneration.bpm || null,
       audioUrl: insertGeneration.audioUrl || null,
       status: insertGeneration.status || "pending",
       createdAt: new Date(),

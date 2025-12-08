@@ -20,11 +20,10 @@ export function GenerationHistory({ onPlayGeneration }: GenerationHistoryProps) 
   const regenerateMutation = useMutation({
     mutationFn: async (generation: DrumGeneration) => {
       const response = await apiRequest("POST", "/api/generate", {
-        genre: generation.genre,
+        prompt: generation.prompt,
         bpm: generation.bpm,
-        style: generation.style,
       });
-      return response as DrumGeneration;
+      return await response.json() as DrumGeneration;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["/api/history"] });
@@ -55,7 +54,7 @@ export function GenerationHistory({ onPlayGeneration }: GenerationHistoryProps) 
         </div>
         <div className="py-8 text-center">
           <p className="text-muted-foreground text-sm">
-            No generations yet. Create your first beat!
+            No generations yet. Speak or type your first request!
           </p>
         </div>
       </Card>
@@ -102,10 +101,9 @@ function HistoryItem({
   onRegenerate,
   isRegenerating,
 }: HistoryItemProps) {
-  const genreName = generation.genre
-    .split("-")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
+  const truncatedPrompt = generation.prompt.length > 40
+    ? generation.prompt.slice(0, 40) + "..."
+    : generation.prompt;
 
   return (
     <div
@@ -113,20 +111,17 @@ function HistoryItem({
       data-testid={`history-item-${generation.id}`}
     >
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-medium truncate">{genreName}</span>
-          <Badge variant="secondary" className="font-mono text-xs">
-            {generation.bpm} BPM
-          </Badge>
+        <p className="font-medium text-sm truncate">{truncatedPrompt}</p>
+        <div className="flex items-center gap-2 mt-1">
+          {generation.bpm && (
+            <Badge variant="secondary" className="font-mono text-xs">
+              {generation.bpm} BPM
+            </Badge>
+          )}
+          <span className="text-xs text-muted-foreground">
+            {formatDistanceToNow(new Date(generation.createdAt), { addSuffix: true })}
+          </span>
         </div>
-        {generation.style && (
-          <p className="text-xs text-muted-foreground truncate mt-1">
-            {generation.style}
-          </p>
-        )}
-        <p className="text-xs text-muted-foreground mt-1">
-          {formatDistanceToNow(new Date(generation.createdAt), { addSuffix: true })}
-        </p>
       </div>
 
       <div className="flex items-center gap-1">
