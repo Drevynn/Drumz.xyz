@@ -11,7 +11,7 @@ export function Footer() {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                 <Drum className="h-4 w-4 text-primary-foreground" />
               </div>
-              <span className="font-display text-lg font-bold">DrumForge AI</span>
+              <span className="font-display text-lg font-bold">Drumz.xyz</span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">
               AI-powered drum track generation for musicians. Create custom beats in seconds.
@@ -77,7 +77,7 @@ export function Footer() {
 
         <div className="mt-12 border-t border-border pt-6">
           <p className="text-center text-sm text-muted-foreground">
-            {new Date().getFullYear()} DrumForge AI. All generated audio is royalty-free for commercial use.
+            {new Date().getFullYear()} Drumz.xyz. All generated audio is royalty-free for commercial use.
           </p>
         </div>
       </div>

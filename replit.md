@@ -1,7 +1,7 @@
-# DrumForge AI - AI Drum Beat Generator
+# Drumz.xyz - AI Drum Beat Generator
 
 ## Overview
-DrumForge AI is a web application that generates custom AI-powered drum tracks for musicians. Users can select from 9+ genres (rock, punk, jazz, blast beats, reggae, funk, hip hop, latin, trap), set their desired BPM (60-220), and add style prompts to create unique drum patterns.
+Drumz.xyz is a web application that generates custom AI-powered drum tracks for musicians. Users can select from 9+ genres (rock, punk, jazz, blast beats, reggae, funk, hip hop, latin, trap), set their desired BPM (60-220), and add style prompts to create unique drum patterns.
 
 ## Project Architecture
 

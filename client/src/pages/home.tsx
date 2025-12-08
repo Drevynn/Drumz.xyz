@@ -205,7 +205,7 @@ function FinalCTA() {
           Ready to Create Your Beat?
         </h2>
         <p className="mt-4 text-muted-foreground">
-          Join thousands of musicians using DrumForge AI to power their music.
+          Join thousands of musicians using Drumz.xyz to power their music.
           No credit card required.
         </p>
         <Link href="/generate">

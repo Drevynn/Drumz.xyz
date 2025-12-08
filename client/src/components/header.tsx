@@ -12,7 +12,7 @@ export function Header() {
             <Drum className="h-5 w-5 text-primary-foreground" />
           </div>
           <span className="font-display text-xl font-bold" data-testid="text-logo">
-            DrumForge AI
+            Drumz.xyz
           </span>
         </Link>
 
