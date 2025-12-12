@@ -7,6 +7,7 @@ import { Footer } from "@/components/footer";
 import { DrumGenerator } from "@/components/drum-generator";
 import { GenerationHistory } from "@/components/generation-history";
 import { AudioPlayer } from "@/components/audio-player";
+import { AdUnit } from "@/components/adsense-script";
 import type { DrumGeneration } from "@shared/schema";
 
 export default function GeneratePage() {
@@ -61,8 +62,11 @@ export default function GeneratePage() {
               )}
             </div>
 
-            <div className="lg:sticky lg:top-24 lg:self-start">
+            <div className="lg:sticky lg:top-24 lg:self-start space-y-6">
               <GenerationHistory onPlayGeneration={handlePlayGeneration} />
+              <div className="hidden lg:block">
+                <AdUnit slotId="0987654321" format="vertical" />
+              </div>
             </div>
           </div>
         </div>

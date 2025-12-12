@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { AdUnit } from "@/components/adsense-script";
 
 export default function Home() {
   return (
@@ -224,6 +225,10 @@ function FinalCTA() {
             Start Creating Now
           </Button>
         </Link>
+        
+        <div className="mt-16 py-8 border-t">
+          <AdUnit slotId="1234567890" format="auto" />
+        </div>
       </div>
     </section>
   );
