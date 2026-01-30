@@ -3,6 +3,7 @@ import { type Server } from "http";
 import { storage } from "./storage";
 import { generateDrumRequestSchema, TIER_LIMITS } from "@shared/schema";
 import { setupAuth, registerAuthRoutes, isAuthenticated } from "./replit_integrations/auth";
+import { registerStripeRoutes } from "./stripe";
 
 export async function registerRoutes(
   httpServer: Server,
@@ -12,6 +13,9 @@ export async function registerRoutes(
   // Setup Replit Auth (must be before other routes)
   await setupAuth(app);
   registerAuthRoutes(app);
+  
+  // Setup Stripe payment routes
+  registerStripeRoutes(app);
   
   // Generate drums endpoint
   app.post("/api/generate", async (req: any, res) => {

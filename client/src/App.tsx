@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AdSenseScript } from "@/components/adsense-script";
 import Home from "@/pages/home";
 import GeneratePage from "@/pages/generate";
+import PricingPage from "@/pages/pricing";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -14,6 +15,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/generate" component={GeneratePage} />
+      <Route path="/pricing" component={PricingPage} />
       <Route component={NotFound} />
     </Switch>
   );

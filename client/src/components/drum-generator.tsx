@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { Loader2, Sparkles, Volume2 } from "lucide-react";
+import { Link } from "wouter";
+import { Loader2, Sparkles, Volume2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { type DrumGeneration } from "@shared/schema";
@@ -15,9 +17,11 @@ import { VoiceInput } from "./voice-input";
 
 interface DrumGeneratorProps {
   onGenerationComplete?: (generation: DrumGeneration) => void;
+  canGenerate?: boolean;
+  generationsRemaining?: number;
 }
 
-export function DrumGenerator({ onGenerationComplete }: DrumGeneratorProps) {
+export function DrumGenerator({ onGenerationComplete, canGenerate = true, generationsRemaining }: DrumGeneratorProps) {
   const { toast } = useToast();
   const [prompt, setPrompt] = useState<string>("");
   const [bpm, setBpm] = useState<number>(120);
@@ -139,9 +143,24 @@ export function DrumGenerator({ onGenerationComplete }: DrumGeneratorProps) {
             )}
           </div>
 
+          {!canGenerate && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Generation Limit Reached</AlertTitle>
+              <AlertDescription className="flex items-center justify-between gap-4">
+                <span>You've used all your generations this month.</span>
+                <Link href="/pricing">
+                  <Button size="sm" variant="outline" data-testid="button-upgrade-alert">
+                    Upgrade Now
+                  </Button>
+                </Link>
+              </AlertDescription>
+            </Alert>
+          )}
+
           <Button
             onClick={() => handleGenerate()}
-            disabled={generateMutation.isPending || !prompt.trim()}
+            disabled={generateMutation.isPending || !prompt.trim() || !canGenerate}
             className="w-full"
             size="lg"
             data-testid="button-generate"
@@ -150,6 +169,11 @@ export function DrumGenerator({ onGenerationComplete }: DrumGeneratorProps) {
               <>
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                 Creating your beat...
+              </>
+            ) : !canGenerate ? (
+              <>
+                <AlertCircle className="mr-2 h-5 w-5" />
+                Limit Reached - Upgrade to Continue
               </>
             ) : (
               <>
