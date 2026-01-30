@@ -3,22 +3,91 @@ import { pgTable, text, varchar, integer, timestamp } from "drizzle-orm/pg-core"
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const users = pgTable("users", {
+// Re-export auth models (required for Replit Auth)
+export * from "./models/auth";
+
+// Subscription tiers
+export const SUBSCRIPTION_TIERS = {
+  FREE: "free",
+  BASIC: "basic",
+  PRO: "pro",
+  PREMIUM: "premium",
+} as const;
+
+export type SubscriptionTier = typeof SUBSCRIPTION_TIERS[keyof typeof SUBSCRIPTION_TIERS];
+
+// Tier features and limits
+export const TIER_LIMITS = {
+  free: {
+    name: "Free",
+    price: 0,
+    generationsPerMonth: 5,
+    downloadFormats: ["mp3"],
+    maxBpmRange: true,
+    priority: false,
+    adFree: false,
+    historyDays: 7,
+  },
+  basic: {
+    name: "Basic",
+    price: 4.99,
+    generationsPerMonth: 25,
+    downloadFormats: ["mp3"],
+    maxBpmRange: true,
+    priority: false,
+    adFree: true,
+    historyDays: 30,
+  },
+  pro: {
+    name: "Pro",
+    price: 9.99,
+    generationsPerMonth: 100,
+    downloadFormats: ["mp3", "wav"],
+    maxBpmRange: true,
+    priority: true,
+    adFree: true,
+    historyDays: 90,
+  },
+  premium: {
+    name: "Premium",
+    price: 19.99,
+    generationsPerMonth: -1, // unlimited
+    downloadFormats: ["mp3", "wav"],
+    maxBpmRange: true,
+    priority: true,
+    adFree: true,
+    historyDays: -1, // unlimited
+  },
+} as const;
+
+// User subscriptions table
+export const subscriptions = pgTable("subscriptions", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+  userId: varchar("user_id").notNull(),
+  tier: text("tier").notNull().default("free"),
+  stripeCustomerId: varchar("stripe_customer_id"),
+  stripeSubscriptionId: varchar("stripe_subscription_id"),
+  currentPeriodStart: timestamp("current_period_start"),
+  currentPeriodEnd: timestamp("current_period_end"),
+  generationsThisMonth: integer("generations_this_month").default(0),
+  lastGenerationReset: timestamp("last_generation_reset").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+export const insertSubscriptionSchema = createInsertSchema(subscriptions).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
+export type InsertSubscription = z.infer<typeof insertSubscriptionSchema>;
+export type Subscription = typeof subscriptions.$inferSelect;
 
+// Drum generations table
 export const drumGenerations = pgTable("drum_generations", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id"),
   prompt: text("prompt").notNull(),
   bpm: integer("bpm"),
   audioUrl: text("audio_url"),
