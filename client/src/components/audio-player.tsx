@@ -1,8 +1,15 @@
 import { useState, useRef, useEffect } from "react";
-import { Play, Pause, Download, RotateCcw, Volume2, VolumeX } from "lucide-react";
+import { Play, Pause, Download, RotateCcw, Volume2, VolumeX, Repeat, Gauge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface AudioPlayerProps {
   audioUrl: string;
@@ -10,6 +17,15 @@ interface AudioPlayerProps {
   onRegenerate?: () => void;
   isRegenerating?: boolean;
 }
+
+const SPEED_OPTIONS = [
+  { value: 0.5, label: "0.5x" },
+  { value: 0.75, label: "0.75x" },
+  { value: 1, label: "1x" },
+  { value: 1.25, label: "1.25x" },
+  { value: 1.5, label: "1.5x" },
+  { value: 2, label: "2x" },
+];
 
 export function AudioPlayer({
   audioUrl,
@@ -25,6 +41,8 @@ export function AudioPlayer({
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.8);
   const [isMuted, setIsMuted] = useState(false);
+  const [isLooping, setIsLooping] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -39,8 +57,10 @@ export function AudioPlayer({
     };
 
     const handleEnded = () => {
-      setIsPlaying(false);
-      setCurrentTime(0);
+      if (!isLooping) {
+        setIsPlaying(false);
+        setCurrentTime(0);
+      }
     };
 
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
@@ -52,13 +72,25 @@ export function AudioPlayer({
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("ended", handleEnded);
     };
-  }, [audioUrl]);
+  }, [audioUrl, isLooping]);
 
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = isMuted ? 0 : volume;
     }
   }, [volume, isMuted]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.loop = isLooping;
+    }
+  }, [isLooping]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.playbackRate = playbackSpeed;
+    }
+  }, [playbackSpeed]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -147,12 +179,30 @@ export function AudioPlayer({
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
+  const handleSpeedChange = (speed: number) => {
+    setPlaybackSpeed(speed);
+  };
+
   return (
     <Card className="p-6">
       <audio ref={audioRef} src={audioUrl} preload="metadata" />
       
       {title && (
-        <p className="text-sm text-muted-foreground mb-3 truncate">{title}</p>
+        <div className="flex items-center justify-between mb-3 gap-2">
+          <p className="text-sm text-muted-foreground truncate flex-1">{title}</p>
+          <div className="flex items-center gap-2 shrink-0">
+            {isLooping && (
+              <Badge variant="secondary" className="text-xs">
+                Loop
+              </Badge>
+            )}
+            {playbackSpeed !== 1 && (
+              <Badge variant="secondary" className="text-xs">
+                {playbackSpeed}x
+              </Badge>
+            )}
+          </div>
+        </div>
       )}
       
       <div className="mb-4">
@@ -193,7 +243,44 @@ export function AudioPlayer({
           </span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <Button
+            size="icon"
+            variant={isLooping ? "secondary" : "ghost"}
+            onClick={() => setIsLooping(!isLooping)}
+            className={isLooping ? "text-primary" : ""}
+            data-testid="button-loop"
+            title="Toggle loop"
+          >
+            <Repeat className="h-4 w-4" />
+          </Button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                size="icon"
+                variant={playbackSpeed !== 1 ? "secondary" : "ghost"}
+                className={playbackSpeed !== 1 ? "text-primary" : ""}
+                data-testid="button-speed"
+                title="Playback speed"
+              >
+                <Gauge className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="center">
+              {SPEED_OPTIONS.map((option) => (
+                <DropdownMenuItem
+                  key={option.value}
+                  onClick={() => handleSpeedChange(option.value)}
+                  className={playbackSpeed === option.value ? "bg-accent" : ""}
+                >
+                  {option.label}
+                  {option.value === 1 && " (Normal)"}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Button
             size="icon"
             variant="ghost"
