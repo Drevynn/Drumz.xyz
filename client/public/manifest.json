@@ -1,0 +1,35 @@
+{
+  "name": "Drumz.xyz - AI Drum Generator",
+  "short_name": "Drumz",
+  "description": "Generate custom AI-powered drum tracks for any genre. Voice-activated drum generator for musicians.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0b",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["music", "entertainment", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Generate Drums",
+      "short_name": "Generate",
+      "description": "Create a new drum track",
+      "url": "/generate",
+      "icons": [{ "src": "/favicon.png", "sizes": "192x192" }]
+    }
+  ]
+}

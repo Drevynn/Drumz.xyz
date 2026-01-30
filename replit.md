@@ -123,6 +123,7 @@ Drumz.xyz is a voice-activated web application that generates custom AI-powered 
 - **Tiered Subscriptions**: Free, Basic, Pro, Premium plans
 - **Dark/Light Theme**: Toggle between modes
 - **Responsive Design**: Works on mobile and desktop
+- **Progressive Web App**: Installable, offline-capable, app-like experience
 
 ## Development Notes
 
