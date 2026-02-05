@@ -38,12 +38,12 @@ function HeroSection() {
           Voice-Powered AI Drums
         </Badge>
         
-        <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
+        <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
           Just Say What You Need
           <span className="block text-primary">We'll Create the Beat</span>
         </h1>
         
-        <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
+        <p className="mx-auto mt-6 max-w-2xl text-base text-muted-foreground md:text-lg">
           Describe your perfect drum track in natural language. 
           "Give me a funky hip hop beat with ghost notes" - and it's yours in seconds.
         </p>
@@ -92,7 +92,7 @@ function ExamplesSection() {
     <section id="examples" className="py-24 bg-card/50">
       <div className="mx-auto max-w-7xl px-4 md:px-6">
         <div className="text-center">
-          <h2 className="font-display text-3xl font-bold md:text-4xl">
+          <h2 className="font-display text-2xl font-bold md:text-3xl">
             Just Say It
           </h2>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
@@ -148,7 +148,7 @@ function HowItWorks() {
     <section className="py-24">
       <div className="mx-auto max-w-3xl px-4 md:px-6">
         <div className="text-center">
-          <h2 className="font-display text-3xl font-bold md:text-4xl">
+          <h2 className="font-display text-2xl font-bold md:text-3xl">
             How It Works
           </h2>
           <p className="mt-4 text-muted-foreground">
@@ -167,7 +167,7 @@ function HowItWorks() {
               <div className="pt-2">
                 <div className="flex items-center gap-2">
                   <step.icon className="h-5 w-5 text-primary" />
-                  <h3 className="font-display text-xl font-semibold">
+                  <h3 className="font-display text-lg font-semibold">
                     {step.title}
                   </h3>
                 </div>
@@ -196,7 +196,7 @@ function SocialProof() {
         <div className="flex flex-wrap items-center justify-center gap-12 md:gap-24">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
-              <p className="font-display text-4xl font-bold text-primary">
+              <p className="font-display text-3xl font-bold text-primary">
                 {stat.value}
               </p>
               <p className="mt-2 text-sm text-muted-foreground">{stat.label}</p>
@@ -212,7 +212,7 @@ function FinalCTA() {
   return (
     <section className="py-24">
       <div className="mx-auto max-w-3xl px-4 text-center md:px-6">
-        <h2 className="font-display text-3xl font-bold md:text-4xl">
+        <h2 className="font-display text-2xl font-bold md:text-3xl">
           Ready to Create Your Beat?
         </h2>
         <p className="mt-4 text-muted-foreground">
