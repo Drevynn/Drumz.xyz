@@ -19,9 +19,12 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <Drum className="h-5 w-5 text-primary-foreground" />
-          </div>
+          <img 
+            src="/logo.png" 
+            alt="Drumz.xyz Logo" 
+            className="h-10 w-auto"
+            data-testid="img-logo"
+          />
           <span className="font-display text-xl font-bold" data-testid="text-logo">
             Drumz.xyz
           </span>

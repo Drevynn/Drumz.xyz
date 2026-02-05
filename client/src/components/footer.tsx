@@ -1,4 +1,4 @@
-import { Drum, Github, Twitter } from "lucide-react";
+import { Github, Twitter } from "lucide-react";
 import { Link } from "wouter";
 
 export function Footer() {
@@ -8,9 +8,11 @@ export function Footer() {
         <div className="grid gap-8 md:grid-cols-4">
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2" data-testid="link-footer-logo">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                <Drum className="h-4 w-4 text-primary-foreground" />
-              </div>
+              <img 
+                src="/logo.png" 
+                alt="Drumz.xyz Logo" 
+                className="h-8 w-auto"
+              />
               <span className="font-display text-lg font-bold">Drumz.xyz</span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">
@@ -27,7 +29,9 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <span className="cursor-default">Pricing (Coming Soon)</span>
+                <Link href="/pricing" className="hover:text-foreground transition-colors" data-testid="link-footer-pricing">
+                  Pricing
+                </Link>
               </li>
               <li>
                 <span className="cursor-default">API Access (Coming Soon)</span>
