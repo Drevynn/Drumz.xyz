@@ -1,6 +1,6 @@
 {
-  "name": "Drumz.xyz - AI Drum Generator",
-  "short_name": "Drumz",
+  "name": "Hum Drumz - AI Drum Generator",
+  "short_name": "Hum Drumz",
   "description": "Generate custom AI-powered drum tracks for any genre. Voice-activated drum generator for musicians.",
   "start_url": "/",
   "display": "standalone",

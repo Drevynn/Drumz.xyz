@@ -15,7 +15,7 @@ const tiers = [
     id: "free",
     name: "Free",
     price: 0,
-    description: "Perfect for trying out Drumz.xyz",
+    description: "Perfect for trying out Hum Drumz",
     icon: Music,
     features: [
       { text: "5 generations per month", included: true },

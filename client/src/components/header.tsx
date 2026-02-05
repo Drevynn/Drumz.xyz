@@ -21,12 +21,12 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2">
           <img 
             src="/logo.png" 
-            alt="Drumz.xyz Logo" 
+            alt="Hum Drumz Logo" 
             className="h-10 w-auto"
             data-testid="img-logo"
           />
           <span className="font-display text-xl font-bold" data-testid="text-logo">
-            Drumz.xyz
+            Hum Drumz
           </span>
         </Link>
 

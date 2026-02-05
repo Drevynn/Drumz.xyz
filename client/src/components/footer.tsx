@@ -10,10 +10,10 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-2" data-testid="link-footer-logo">
               <img 
                 src="/logo.png" 
-                alt="Drumz.xyz Logo" 
+                alt="Hum Drumz Logo" 
                 className="h-8 w-auto"
               />
-              <span className="font-display text-lg font-bold">Drumz.xyz</span>
+              <span className="font-display text-lg font-bold">Hum Drumz</span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">
               AI-powered drum track generation for musicians. Create custom beats in seconds.
@@ -81,7 +81,7 @@ export function Footer() {
 
         <div className="mt-12 border-t border-border pt-6">
           <p className="text-center text-sm text-muted-foreground">
-            {new Date().getFullYear()} Drumz.xyz. All generated audio is royalty-free for commercial use.
+            {new Date().getFullYear()} Hum Drumz. All generated audio is royalty-free for commercial use.
           </p>
         </div>
       </div>

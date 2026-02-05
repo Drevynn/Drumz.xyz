@@ -1,7 +1,7 @@
-# Drumz.xyz - Voice-Powered AI Drum Generator
+# Hum Drumz - Voice-Powered AI Drum Generator
 
 ## Overview
-Drumz.xyz is a voice-activated web application that generates custom AI-powered drum tracks for musicians. Like Suno, but for drums only - users speak or type natural language descriptions of the drums they need, and the AI generates custom drum patterns in seconds.
+Hum Drumz is a voice-activated web application that generates custom AI-powered drum tracks for musicians. Like Suno, but for drums only - users speak or type natural language descriptions of the drums they need, and the AI generates custom drum patterns in seconds.
 
 ## Project Architecture
 

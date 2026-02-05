@@ -216,7 +216,7 @@ function FinalCTA() {
           Ready to Create Your Beat?
         </h2>
         <p className="mt-4 text-muted-foreground">
-          Join thousands of musicians using Drumz.xyz to power their music.
+          Join thousands of musicians using Hum Drumz to power their music.
           Just speak and create.
         </p>
         <Link href="/generate">
