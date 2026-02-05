@@ -33,12 +33,14 @@ function HeroSection() {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-4xl px-4 py-24 text-center">
-        <Badge variant="secondary" className="mb-6">
-          Voice-Powered AI Drums
-        </Badge>
+      <div className="relative z-10 mx-auto max-w-4xl px-4 py-16 text-center">
+        <img 
+          src="/hero-logo.png" 
+          alt="Hum Drumz" 
+          className="mx-auto h-64 w-auto mb-8 md:h-80"
+        />
         
-        <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl lg:text-6xl">
+        <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
           Just Say What You Need
           <span className="block text-primary">We'll Create the Beat</span>
         </h1>
