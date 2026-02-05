@@ -7,13 +7,12 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-12 md:px-6">
         <div className="grid gap-8 md:grid-cols-4">
           <div className="md:col-span-1">
-            <Link href="/" className="flex items-center gap-2" data-testid="link-footer-logo">
+            <Link href="/" className="flex items-center" data-testid="link-footer-logo">
               <img 
                 src="/logo.png" 
-                alt="Hum Drumz Logo" 
-                className="h-8 w-auto"
+                alt="Hum Drumz" 
+                className="h-10 w-auto"
               />
-              <span className="font-display text-lg font-bold">Hum Drumz</span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">
               AI-powered drum track generation for musicians. Create custom beats in seconds.

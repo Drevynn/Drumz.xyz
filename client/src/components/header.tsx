@@ -18,16 +18,13 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 md:px-6">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center">
           <img 
             src="/logo.png" 
-            alt="Hum Drumz Logo" 
-            className="h-10 w-auto"
+            alt="Hum Drumz" 
+            className="h-12 w-auto"
             data-testid="img-logo"
           />
-          <span className="font-display text-xl font-bold" data-testid="text-logo">
-            Hum Drumz
-          </span>
         </Link>
 
         <nav className="flex items-center gap-2">
